@@ -34,14 +34,22 @@ end;
 
 procedure VivSp();
 begin
-// Вывод данных из списка
-p3 := p1; // Устанавливаем указатель на начало списка
-while p3 <> nil do
-begin
-  WriteLn('Фамилия: ', p3^.Surname, '    Страна: ', p3^.Country, '    Регистрация: ', p3^.Registration, '   Направление: ', p3^.Naprav,'  Год рождения: ', p3^.Year);
-  p3 := p3^.p; // Переходим к следующему элементу
-end;
-readln();
+
+  // Вывод заголовка таблицы
+  WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+    ['Фамилия', 'Страна', 'Регистрация', 'Направление', 'Год рождения']));
+  WriteLn(StringOfChar('-', 85));
+
+  p3 := p1; // Устанавливаем указатель на начало списка
+  while p3 <> nil do
+  begin
+    // Вывод строки с данными, отформатированными по ширине
+    WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+      [p3^.Surname, p3^.Country, p3^.Registration, p3^.Naprav, p3^.Year]));
+    p3 := p3^.p; // Переходим к следующему элементу
+  end;
+  WriteLn(StringOfChar('-', 85));
+  ReadLn();
 end;
 
 
@@ -110,7 +118,6 @@ begin
           p3^.Naprav := ExtractWord(line);
           p3^.Year := ExtractWord(line);
         end;
-
   end;
   VivSp();
   ClearMem(); // Очистка памяти
