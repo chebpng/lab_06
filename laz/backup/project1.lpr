@@ -15,9 +15,11 @@ type
   end;
 
 var
-  p1, p2, p3: pel; // указатели для работы со списком
+  p1, p2, p3,p4: pel; // указатели для работы со списком
   f: TextFile;
   line,temp: string;
+  tempor : ^elem;
+  Flag:boolean;
 
 
 // Процедура очистки памяти
@@ -49,7 +51,30 @@ begin
     p3 := p3^.p; // Переходим к следующему элементу
   end;
   WriteLn(StringOfChar('-', 85));
-  ReadLn();
+end;
+
+
+procedure VivSpNeRu();
+begin
+
+  // Вывод заголовка таблицы
+  WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+    ['Фамилия', 'Страна', 'Регистрация', 'Направление', 'Год рождения']));
+  WriteLn(StringOfChar('-', 85));
+
+  p3 := p1; // Устанавливаем указатель на начало списка
+  while p3 <> nil do
+  if p3^.Country<>AnsiString('Россия')then
+  begin
+    // Вывод строки с данными, отформатированными по ширине
+    WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+      [p3^.Surname, p3^.Country, p3^.Registration, p3^.Naprav, p3^.Year]));
+    p3 := p3^.p; // Переходим к следующему элементу
+  end
+  else
+    p3:=p3^.p;
+  WriteLn(StringOfChar('-', 85));
+
 end;
 
 
@@ -75,7 +100,7 @@ end;
 
 
 begin
-  AssignFile(f, 'file1.txt'); // Укажите имя файла
+  AssignFile(f, 'file2.txt'); // Укажите имя файла
   Reset(f); // Открываем файл на чтение
 
   p1 := nil; // Начало списка
@@ -102,7 +127,7 @@ begin
     p2 := p3; // Обновляем хвост списка
   end;
   CloseFile(f); // Закрываем файл
-  AssignFile(f, 'file4.txt');
+  AssignFile(f, 'file3.txt');
   Reset(f);
   while not EOF(f) do
   begin
@@ -119,11 +144,77 @@ begin
           p3^.Year := ExtractWord(line);
         end;
   end;
-  VivSp();
+
+  flag := false; // Инициализация флага
+  p2 := p1; // p2 указывает на начало списка
+  p3 := p1^.p; // p3 указывает на следующий элемент
+
+ while not flag do
+begin
+  flag := True; // Считаем, что список отсортирован
+  p2 := nil;    // Указатель на предыдущий элемент
+  p3 := p1;     // Указатель на текущий элемент
+
+  while p3^.p <> nil do
+  begin
+    if p3^.Year > p3^.p^.Year then
+    begin
+      // Меняем местами узлы p3 и p3^.p
+      if p2 = nil then
+      begin
+        // Если p3 — первый элемент списка
+        p1 := p3^.p;       // Начало списка теперь p3^.p
+      end
+      else
+      begin
+        // Связываем предыдущий элемент с p3^.p
+        p2^.p := p3^.p;
+      end;
+
+      // Перестановка ссылок
+      tempor := p3^.p;          // Временная ссылка на следующий элемент
+      p3^.p := tempor^.p;       // p3 теперь указывает на узел после tempor
+      tempor^.p := p3;          // tempor указывает на p3
+
+      // Если был обмен, устанавливаем флаг
+      flag := False;
+
+      // Обновляем указатель p2
+      if p2 = nil then
+        p2 := p1
+      else
+        p2 := tempor;          // prev теперь указывает на новый узел перед p3
+    end
+    else
+    begin
+      // Если обмена не было, переходим к следующей паре элементов
+      p2 := p3;
+      p3 := p3^.p;
+    end;
+  end;
+end;
+VivSp();
+writeln();
+writeln('Для вывода списков субъектов РФ  из которых прибыли на учебу студенты обоих направлений нажмите enter');
+ReadLn();
+p2:= p1;
+p3:= p1;
+writeln();
+while p3^.p <> nil do
+begin
+     if p3^.Country = AnsiString('Россия') then
+     begin
+       writeln(p3^.Registration);
+     end;
+     p3:=p3^.p;
+end;
+writeln();
+writeln('Для ФОРМИРОВАНИЕ ТАБЛИЦЫ С ИНФОРМАЦИЕЙ О ЗАРУБЕЖНЫХ СТУДЕНТАХ нажмите enter');
+readln();
+writeln();
+writeln();
+VivSpNeRu();
+readln();
+
   ClearMem(); // Очистка памяти
   end.
-
-
-
-
-
