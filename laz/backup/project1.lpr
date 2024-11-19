@@ -1,7 +1,7 @@
 {$codepage UTF8}
-program LinkedListExample;
+program mass;
 
-uses SysUtils; // Для Trim
+uses SysUtils;
 
 type
   pel = ^elem;
@@ -9,13 +9,16 @@ type
     Surname: string;
     Country: string;
     Registration: string;
+    Naprav:string;
+    Year:string;
     p: pel; // указатель на следующий элемент списка
   end;
 
 var
   p1, p2, p3: pel; // указатели для работы со списком
   f: TextFile;
-  line: string;
+  line,temp: string;
+
 
 // Процедура очистки памяти
 procedure ClearMem();
@@ -27,6 +30,20 @@ begin
     Dispose(p3); // Освобождаем память текущего элемента
   end;
 end;
+
+
+procedure VivSp();
+begin
+// Вывод данных из списка
+p3 := p1; // Устанавливаем указатель на начало списка
+while p3 <> nil do
+begin
+  WriteLn('Фамилия: ', p3^.Surname, '    Страна: ', p3^.Country, '    Регистрация: ', p3^.Registration, '   Направление: ', p3^.Naprav,'  Год рождения: ', p3^.Year);
+  p3 := p3^.p; // Переходим к следующему элементу
+end;
+readln();
+end;
+
 
 // Функция извлечения первого слова из строки
 function ExtractWord(var s: string): string;
@@ -47,6 +64,7 @@ begin
     s := ''; // Очищаем строку
   end;
 end;
+
 
 begin
   AssignFile(f, 'file1.txt'); // Укажите имя файла
@@ -75,18 +93,30 @@ begin
 
     p2 := p3; // Обновляем хвост списка
   end;
-
   CloseFile(f); // Закрываем файл
-
-  // Вывод данных из списка
-  p3 := p1; // Устанавливаем указатель на начало списка
-  while p3 <> nil do
+  AssignFile(f, 'file4.txt');
+  Reset(f);
+  while not EOF(f) do
   begin
-    WriteLn('Фамилия: ', p3^.Surname, '    Страна: ', p3^.Country, '    Регистрация: ', p3^.Registration);
-    p3 := p3^.p; // Переходим к следующему элементу
-  end;
+       ReadLn(f, line);
+       temp:=ExtractWord(line);
+       p3 := p1;
+       while (p3 <> nil) and (temp <> p3^.Surname) do
+       begin
+           p3:=p3^.p;
+       end;
+        if p3 <> nil then
+        begin
+          p3^.Naprav := ExtractWord(line);
+          p3^.Year := ExtractWord(line);
+        end;
 
+  end;
+  VivSp();
   ClearMem(); // Очистка памяти
-  readln();
-end.
+  end.
+
+
+
+
 

@@ -27,7 +27,7 @@
       <Unit>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="LinkedListExample"/>
+        <UnitName Value="mass"/>
       </Unit>
     </Units>
   </ProjectOptions>
