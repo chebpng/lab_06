@@ -19,7 +19,10 @@ var
   f: TextFile;
   line,temp: string;
   tempor : ^elem;
-  Flag:boolean;
+  SeenRegistrations: array of AnsiString; // Динамический массив для хранения уникальных значений
+  Found, flag: Boolean; // Флаг для проверки, найдено ли значение в массиве
+  i: Integer;
+
 
 
 // Процедура очистки памяти
@@ -100,7 +103,7 @@ end;
 
 
 begin
-  AssignFile(f, 'file2.txt'); // Укажите имя файла
+  AssignFile(f, 'file1.txt'); // Укажите имя файла
   Reset(f); // Открываем файл на чтение
 
   p1 := nil; // Начало списка
@@ -127,7 +130,52 @@ begin
     p2 := p3; // Обновляем хвост списка
   end;
   CloseFile(f); // Закрываем файл
+
+    AssignFile(f, 'file2.txt'); // Укажите имя файла
+  Reset(f); // Открываем файл на чтение
+
+
+  // Читаем файл построчно
+  while not EOF(f) do
+  begin
+    New(p3); // Создаём новую запись
+    ReadLn(f, line); // Читаем строку из файла
+
+    // Разбираем строку и извлекаем данные
+    p3^.Surname := ExtractWord(line); // Извлекаем фамилию
+    p3^.Country := ExtractWord(line); // Извлекаем страну
+    p3^.Registration := line; // Оставшееся — место регистрации
+    p3^.p := nil; // Последний элемент указывает на nil
+
+    // Добавляем элемент в список
+    if p1 = nil then
+      p1 := p3 // Если это первый элемент списка
+    else
+      p2^.p := p3; // Привязываем новый элемент к последнему
+
+    p2 := p3; // Обновляем хвост списка
+  end;
+  CloseFile(f); // Закрываем файл
+
   AssignFile(f, 'file3.txt');
+  Reset(f);
+  while not EOF(f) do
+  begin
+       ReadLn(f, line);
+       temp:=ExtractWord(line);
+       p3 := p1;
+       while (p3 <> nil) and (temp <> p3^.Surname) do
+       begin
+           p3:=p3^.p;
+       end;
+        if p3 <> nil then
+        begin
+          p3^.Naprav := ExtractWord(line);
+          p3^.Year := ExtractWord(line);
+        end;
+  end;
+
+    AssignFile(f, 'file4.txt');
   Reset(f);
   while not EOF(f) do
   begin
@@ -197,19 +245,39 @@ VivSp();
 writeln();
 writeln('Для вывода списков субъектов РФ  из которых прибыли на учебу студенты обоих направлений нажмите enter');
 ReadLn();
-p2:= p1;
-p3:= p1;
-writeln();
-while p3^.p <> nil do
-begin
-     if p3^.Country = AnsiString('Россия') then
-     begin
-       writeln(p3^.Registration);
-     end;
-     p3:=p3^.p;
+SetLength(SeenRegistrations, 0); // Изначально массив пустой
+  p2 := p1;
+  p3 := p1;
+  writeln();
+
+  while p3^.p <> nil do
+  begin
+    if p3^.Country = AnsiString('Россия') then
+    begin
+      // Проверяем, есть ли Registration в массиве SeenRegistrations
+      Found := False;
+      for i := 0 to High(SeenRegistrations) do
+      begin
+        if SeenRegistrations[i] = p3^.Registration then
+        begin
+          Found := True;
+          Break;
+        end;
+      end;
+
+      // Если не найдено, добавляем в массив и выводим
+      if not Found then
+      begin
+        SetLength(SeenRegistrations, Length(SeenRegistrations) + 1);
+        SeenRegistrations[High(SeenRegistrations)] := p3^.Registration;
+        writeln(p3^.Registration);
+      end;
+    end;
+    p3 := p3^.p;
+  end;
 end;
 writeln();
-writeln('Для ФОРМИРОВАНИЕ ТАБЛИЦЫ С ИНФОРМАЦИЕЙ О ЗАРУБЕЖНЫХ СТУДЕНТАХ нажмите enter');
+writeln('Для формирования таблицы с информацией о зарубежных студентах нажмите enter');
 readln();
 writeln();
 writeln();
