@@ -10,8 +10,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="mass"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="111"/>
-        <CursorPos Y="47"/>
+        <TopLine Value="254"/>
+        <CursorPos X="65" Y="265"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
