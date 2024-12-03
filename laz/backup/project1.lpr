@@ -1,3 +1,4 @@
+//вывод в файл, оценить трудоемкость
 {$codepage UTF8}
 program mass;
 
@@ -16,7 +17,7 @@ type
 
 var
   p1, p2, p3,p4: pel; // указатели для работы со списком
-  f: TextFile;
+  f, o: TextFile;
   line,temp: string;
   tempor : ^elem;
   SeenRegistrations: array of AnsiString; // Динамический массив для хранения уникальных значений
@@ -43,7 +44,10 @@ begin
   // Вывод заголовка таблицы
   WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
     ['Фамилия', 'Страна', 'Регистрация', 'Направление', 'Год рождения']));
+  WriteLn(o,Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+    ['Фамилия', 'Страна', 'Регистрация', 'Направление', 'Год рождения']));
   WriteLn(StringOfChar('-', 85));
+  WriteLn(o,StringOfChar('-', 85));
 
   p3 := p1; // Устанавливаем указатель на начало списка
   while p3 <> nil do
@@ -51,9 +55,12 @@ begin
     // Вывод строки с данными, отформатированными по ширине
     WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
       [p3^.Surname, p3^.Country, p3^.Registration, p3^.Naprav, p3^.Year]));
+    WriteLn(o,Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+      [p3^.Surname, p3^.Country, p3^.Registration, p3^.Naprav, p3^.Year]));
     p3 := p3^.p; // Переходим к следующему элементу
   end;
   WriteLn(StringOfChar('-', 85));
+  WriteLn(o, StringOfChar('-', 85));
 end;
 
 
@@ -64,6 +71,9 @@ begin
   WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
     ['Фамилия', 'Страна', 'Регистрация', 'Направление', 'Год рождения']));
   WriteLn(StringOfChar('-', 85));
+    WriteLn(o,Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+    ['Фамилия', 'Страна', 'Регистрация', 'Направление', 'Год рождения']));
+  WriteLn(o,StringOfChar('-', 85));
 
   p3 := p1; // Устанавливаем указатель на начало списка
   while p3 <> nil do
@@ -72,11 +82,14 @@ begin
     // Вывод строки с данными, отформатированными по ширине
     WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
       [p3^.Surname, p3^.Country, p3^.Registration, p3^.Naprav, p3^.Year]));
+        WriteLn(o,Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+      [p3^.Surname, p3^.Country, p3^.Registration, p3^.Naprav, p3^.Year]));
     p3 := p3^.p; // Переходим к следующему элементу
   end
   else
     p3:=p3^.p;
   WriteLn(StringOfChar('-', 85));
+  WriteLn(o,StringOfChar('-', 85));
 
 end;
 
@@ -104,6 +117,7 @@ end;
 
 begin
   AssignFile(f, 'file1.txt'); // Укажите имя файла
+  AssignFile(o, 'vivod.txt');
   Reset(f); // Открываем файл на чтение
 
   p1 := nil; // Начало списка
@@ -271,11 +285,11 @@ SetLength(SeenRegistrations, 0); // Изначально массив пусто
         SetLength(SeenRegistrations, Length(SeenRegistrations) + 1);
         SeenRegistrations[High(SeenRegistrations)] := p3^.Registration;
         writeln(p3^.Registration);
+        writeln(o, p3^.Registration);
       end;
     end;
     p3 := p3^.p;
   end;
-end;
 writeln();
 writeln('Для формирования таблицы с информацией о зарубежных студентах нажмите enter');
 readln();
@@ -284,5 +298,6 @@ writeln();
 VivSpNeRu();
 readln();
 
-  ClearMem(); // Очистка памяти
+  ClearMem();
+  close(o);
   end.
