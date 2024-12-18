@@ -297,7 +297,6 @@ writeln();
 writeln('Для формирования таблицы с информацией о зарубежных студентах нажмите enter');
 readln();
 writeln();
-writeln();
 writeln(o, ' ');
 writeln(o,'Информация о зарубежных студентах: ');
 VivSpNeRu();

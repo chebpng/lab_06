@@ -10,17 +10,13 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="mass"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="254"/>
-        <CursorPos X="65" Y="265"/>
+        <TopLine Value="98"/>
+        <CursorPos Y="118"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="project1.lpr"/>
-        <Caret Line="90" Column="22" TopLine="74"/>
-      </Position>
       <Position>
         <Filename Value="project1.lpr"/>
         <Caret Line="91" Column="3" TopLine="74"/>
@@ -136,6 +132,10 @@
       <Position>
         <Filename Value="project1.lpr"/>
         <Caret Line="120" Column="30" TopLine="104"/>
+      </Position>
+      <Position>
+        <Filename Value="project1.lpr"/>
+        <Caret Line="50" Column="64" TopLine="20"/>
       </Position>
     </JumpHistory>
     <RunParams>

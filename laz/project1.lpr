@@ -1,4 +1,3 @@
-//вывод в файл, оценить трудоемкость
 {$codepage UTF8}
 program mass;
 
@@ -24,8 +23,6 @@ var
   Found, flag: Boolean; // Флаг для проверки, найдено ли значение в массиве
   i: Integer;
 
-
-
 // Процедура очистки памяти
 procedure ClearMem();
 begin
@@ -36,7 +33,6 @@ begin
     Dispose(p3); // Освобождаем память текущего элемента
   end;
 end;
-
 
 procedure VivSp();
 begin
@@ -63,7 +59,6 @@ begin
   WriteLn(o, StringOfChar('-', 85));
 end;
 
-
 procedure VivSpNeRu();
 begin
 
@@ -71,7 +66,7 @@ begin
   WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
     ['Фамилия', 'Страна', 'Регистрация', 'Направление', 'Год рождения']));
   WriteLn(StringOfChar('-', 85));
-    WriteLn(o,Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+  WriteLn(o,Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
     ['Фамилия', 'Страна', 'Регистрация', 'Направление', 'Год рождения']));
   WriteLn(o,StringOfChar('-', 85));
 
@@ -82,7 +77,7 @@ begin
     // Вывод строки с данными, отформатированными по ширине
     WriteLn(Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
       [p3^.Surname, p3^.Country, p3^.Registration, p3^.Naprav, p3^.Year]));
-        WriteLn(o,Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
+    WriteLn(o,Format('%-15s|%-15s|%-20s|%-15s|%-15s|',
       [p3^.Surname, p3^.Country, p3^.Registration, p3^.Naprav, p3^.Year]));
     p3 := p3^.p; // Переходим к следующему элементу
   end
@@ -92,7 +87,6 @@ begin
   WriteLn(o,StringOfChar('-', 85));
 
 end;
-
 
 // Функция извлечения первого слова из строки
 function ExtractWord(var s: string): string;
@@ -114,13 +108,11 @@ begin
   end;
 end;
 
-
 begin
   AssignFile(f, 'file1.txt'); // Укажите имя файла
   AssignFile(o, 'vivod.txt');
   Reset(f); // Открываем файл на чтение
   rewrite(o);
-
   p1 := nil; // Начало списка
   p2 := nil; // Текущий хвост списка
 
@@ -145,10 +137,8 @@ begin
     p2 := p3; // Обновляем хвост списка
   end;
   CloseFile(f); // Закрываем файл
-
-    AssignFile(f, 'file2.txt'); // Укажите имя файла
+  AssignFile(f, 'file2.txt'); // Укажите имя файла
   Reset(f); // Открываем файл на чтение
-
 
   // Читаем файл построчно
   while not EOF(f) do
@@ -176,93 +166,94 @@ begin
   Reset(f);
   while not EOF(f) do
   begin
-       ReadLn(f, line);
-       temp:=ExtractWord(line);
-       p3 := p1;
-       while (p3 <> nil) and (temp <> p3^.Surname) do
-       begin
-           p3:=p3^.p;
-       end;
-        if p3 <> nil then
-        begin
-          p3^.Naprav := ExtractWord(line);
-          p3^.Year := ExtractWord(line);
-        end;
+    ReadLn(f, line);
+    temp := ExtractWord(line);
+    p3 := p1;
+    while (p3 <> nil) and (temp <> p3^.Surname) do
+    begin
+      p3 := p3^.p;
+    end;
+    if p3 <> nil then
+    begin
+      p3^.Naprav := ExtractWord(line);
+      p3^.Year := ExtractWord(line);
+    end;
   end;
 
-    AssignFile(f, 'file4.txt');
+  AssignFile(f, 'file4.txt');
   Reset(f);
   while not EOF(f) do
   begin
-       ReadLn(f, line);
-       temp:=ExtractWord(line);
-       p3 := p1;
-       while (p3 <> nil) and (temp <> p3^.Surname) do
-       begin
-           p3:=p3^.p;
-       end;
-        if p3 <> nil then
-        begin
-          p3^.Naprav := ExtractWord(line);
-          p3^.Year := ExtractWord(line);
-        end;
+    ReadLn(f, line);
+    temp := ExtractWord(line);
+    p3 := p1;
+    while (p3 <> nil) and (temp <> p3^.Surname) do
+    begin
+      p3 := p3^.p;
+    end;
+    if p3 <> nil then
+    begin
+      p3^.Naprav := ExtractWord(line);
+      p3^.Year := ExtractWord(line);
+    end;
   end;
 
-  flag := false; // Инициализация флага
+  flag := False; // Инициализация флага
   p2 := p1; // p2 указывает на начало списка
   p3 := p1^.p; // p3 указывает на следующий элемент
 
- while not flag do
-begin
-  flag := True; // Считаем, что список отсортирован
-  p2 := nil;    // Указатель на предыдущий элемент
-  p3 := p1;     // Указатель на текущий элемент
-
-  while p3^.p <> nil do
+  while not flag do
   begin
-    if p3^.Year > p3^.p^.Year then
+    flag := True; // Считаем, что список отсортирован
+    p2 := nil;    // Указатель на предыдущий элемент
+    p3 := p1;     // Указатель на текущий элемент
+
+    while p3^.p <> nil do
     begin
-      // Меняем местами узлы p3 и p3^.p
-      if p2 = nil then
+      if p3^.Year > p3^.p^.Year then
       begin
-        // Если p3 — первый элемент списка
-        p1 := p3^.p;       // Начало списка теперь p3^.p
+        // Меняем местами узлы p3 и p3^.p
+        if p2 = nil then
+        begin
+          // Если p3 — первый элемент списка
+          p1 := p3^.p;       // Начало списка теперь p3^.p
+        end
+        else
+        begin
+          // Связываем предыдущий элемент с p3^.p
+          p2^.p := p3^.p;
+        end;
+
+        // Перестановка ссылок
+        tempor := p3^.p;          // Временная ссылка на следующий элемент
+        p3^.p := tempor^.p;       // p3 теперь указывает на узел после tempor
+        tempor^.p := p3;          // tempor указывает на p3
+
+        // Если был обмен, устанавливаем флаг
+        flag := False;
+
+        // Обновляем указатель p2
+        if p2 = nil then
+          p2 := p1
+        else
+          p2 := tempor;          // prev теперь указывает на новый узел перед p3
       end
       else
       begin
-        // Связываем предыдущий элемент с p3^.p
-        p2^.p := p3^.p;
+        // Если обмена не было, переходим к следующей паре элементов
+        p2 := p3;
+        p3 := p3^.p;
       end;
-
-      // Перестановка ссылок
-      tempor := p3^.p;          // Временная ссылка на следующий элемент
-      p3^.p := tempor^.p;       // p3 теперь указывает на узел после tempor
-      tempor^.p := p3;          // tempor указывает на p3
-
-      // Если был обмен, устанавливаем флаг
-      flag := False;
-
-      // Обновляем указатель p2
-      if p2 = nil then
-        p2 := p1
-      else
-        p2 := tempor;          // prev теперь указывает на новый узел перед p3
-    end
-    else
-    begin
-      // Если обмена не было, переходим к следующей паре элементов
-      p2 := p3;
-      p3 := p3^.p;
     end;
   end;
-end;
-VivSp();
-writeln();
-writeln('Для вывода списков субъектов РФ  из которых прибыли на учебу студенты обоих направлений нажмите enter');
-ReadLn();
-writeln(o, ' ');
-writeln(o, 'Субьекты РФ из которых прибыли на учебу студенты обоих направлений: ');
-SetLength(SeenRegistrations, 0); // Изначально массив пустой
+
+  VivSp();
+  writeln();
+  writeln('Для вывода списков субъектов РФ  из которых прибыли на учебу студенты обоих направлений нажмите enter');
+  ReadLn();
+  writeln(o, ' ');
+  writeln(o, 'Субьекты РФ из которых прибыли на учебу студенты обоих направлений: ');
+  SetLength(SeenRegistrations, 0); // Изначально массив пустой
   p2 := p1;
   p3 := p1;
   writeln();
@@ -293,15 +284,17 @@ SetLength(SeenRegistrations, 0); // Изначально массив пусто
     end;
     p3 := p3^.p;
   end;
-writeln();
-writeln('Для формирования таблицы с информацией о зарубежных студентах нажмите enter');
-readln();
-writeln();
-writeln(o, ' ');
-writeln(o,'Информация о зарубежных студентах: ');
-VivSpNeRu();
-readln();
+
+  writeln();
+  writeln('Для формирования таблицы с информацией о зарубежных студентах нажмите enter');
+  readln();
+  writeln();
+  writeln(o, ' ');
+  writeln(o, 'Информация о зарубежных студентах: ');
+  VivSpNeRu();
+  readln();
 
   ClearMem();
   close(o);
-  end.
+end.
+
